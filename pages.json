@@ -1,0 +1,80 @@
+{
+    "pages": [{
+            "path":"pages/record/record",
+            "style": {
+              "navigationBarTitleText": "打卡页面"
+            }
+        }, {
+            "path":"pages/user/user",
+            "style": {
+              "navigationBarTitleText": "我的信息"
+            }
+        }, {
+            "path" : "pages/test/test",
+            "style": {
+            	"navigationBarTitleText": "测试"
+            }
+        }, {         
+            "path": "pages/index/index",
+            "style": {
+              "navigationBarTitleText": "欢迎"
+            }
+        }, {
+          "path": "pages/template/uni-center",
+          "style": {
+            "navigationBarTitleText": "uni用户中心模板"
+          }
+        }
+        ,{
+            "path" : "pages/login/login",
+            "style" : {
+              "navigationBarTitleText": "欢迎界面"
+            }
+        }
+        ,{
+            "path" : "pages/blank/blank",
+            "style" : {}
+        }
+    ],
+    "globalStyle": {
+        "navigationBarTextStyle": "black",
+        "navigationBarTitleText": "uni-app",
+        "navigationBarBackgroundColor": "#FFFFFF",
+        "backgroundColor": "#D8D8D8"
+    },
+    "tabBar": {
+    	"color": "#7A7E83",
+    	"selectedColor": "#007AFF",
+    	"borderStyle": "black",
+    	"backgroundColor": "#F8F8F8",
+    	"list": [{
+    			"pagePath": "pages/record/record",
+    			"iconPath": "static/icon/home.png",
+    			"selectedIconPath": "static/icon/homeHL.png",
+    			"text": "打卡"
+    		},
+    		{
+    			"pagePath": "pages/user/user",
+    			"iconPath": "static/icon/my.png",
+    			"selectedIconPath": "static/icon/myHL.png",
+    			"text": "我的"
+    		},
+        {
+        	"pagePath": "pages/template/uni-center",
+        	"iconPath": "static/icon/record.png",
+        	"selectedIconPath": "static/icon/record_selected.png",
+        	"text": "模板"
+        }
+    	]
+    },
+  "condition" : { //模式配置，仅开发期间生效
+    "current": 0, //当前激活的模式(list 的索引项)
+    "list": [
+      {
+        "name": "", //模式名称
+        "path": "", //启动页面，必选
+        "query": "" //启动参数，在页面的onLoad函数里面得到
+      }
+    ]
+  }
+}
