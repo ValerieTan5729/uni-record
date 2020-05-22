@@ -20,27 +20,39 @@
               "navigationBarTitleText": "欢迎"
             }
         }, {
-          "path": "pages/template/uni-center",
-          "style": {
-            "navigationBarTitleText": "uni用户中心模板"
-          }
-        }
-        ,{
             "path" : "pages/login/login",
             "style" : {
               "navigationBarTitleText": "欢迎界面"
             }
-        }
-        ,{
+        }, {
             "path" : "pages/blank/blank",
             "style" : {}
+        }, {
+            "path" : "pages/user/info/info",
+            "style" : {
+              "navigationBarTitleText": "用户详情"
+            }
+        }, {
+            "path" : "pages/duty/duty",
+            "style" : {
+              "navigationBarTitleText": "总值列表"
+            }
+        }, {
+            "path" : "pages/record/user/user",
+            "style" : {
+              "navigationBarTitleText": "用户打卡记录"
+            }
+        }, {
+            "path" : "pages/record/detail/detail",
+            "style" : {
+              "navigationBarTitleText": "打卡记录"
+            }
         }
     ],
     "globalStyle": {
         "navigationBarTextStyle": "black",
         "navigationBarTitleText": "uni-app",
-        "navigationBarBackgroundColor": "#FFFFFF",
-        "backgroundColor": "#D8D8D8"
+        "navigationBarBackgroundColor": "#FFFFFF"
     },
     "tabBar": {
     	"color": "#7A7E83",
@@ -58,13 +70,7 @@
     			"iconPath": "static/icon/my.png",
     			"selectedIconPath": "static/icon/myHL.png",
     			"text": "我的"
-    		},
-        {
-        	"pagePath": "pages/template/uni-center",
-        	"iconPath": "static/icon/record.png",
-        	"selectedIconPath": "static/icon/record_selected.png",
-        	"text": "模板"
-        }
+    		}
     	]
     },
   "condition" : { //模式配置，仅开发期间生效

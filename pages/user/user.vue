@@ -1,7 +1,7 @@
 <template>
-	<view class="center">
+  <view class="center">
     <!-- <view class="container loginCard" v-if="userInfo.phone === undefined"> -->
-		<view class="container loginCard" v-if="!hasLogin">
+    <view class="container loginCard" v-if="!hasLogin">
       <uni-card
         mode="basic"
         note="欢迎使用电视台总值打卡系统"
@@ -23,42 +23,48 @@
         </view>
       </view>
       <view class="center-list">
-      	<view class="center-list-item border-bottom" @click="getInfoDetail">
-      		<text class="iconfont">&#xe6de;</text>
-      		<text class="list-text">个人信息</text>
-      		<text class="iconfont">&#xe65b;</text>
-      	</view>
-      	<view class="center-list-item" @click="getRecordDetail">
-      		<text class="iconfont">&#xe6e2;</text>
-      		<text class="list-text">打卡记录</text>
-      		<text class="iconfont">&#xe65b;</text>
-      	</view>
+        <view class="center-list-item border-bottom" @click="getInfoDetail">
+          <text class="iconfont">&#xe6de;</text>
+          <text class="list-text">个人信息</text>
+          <text class="iconfont">&#xe65b;</text>
+        </view>
+        <view class="center-list-item border-bottom" @click="getRecordDetail">
+          <text class="iconfont">&#xe6e2;</text>
+          <text class="list-text">打卡记录</text>
+          <text class="iconfont">&#xe65b;</text>
+        </view>
+        <view class="center-list-item" v-if="isAdmin" @click="getAllRecord">
+          <text class="iconfont">&#xe64f;</text>
+          <text class="list-text">考勤记录</text>
+          <text class="iconfont">&#xe65b;</text>
+        </view>
       </view>
     </view>
-	</view>
+  </view>
 </template>
 
 <script>
-	export default {
-		data () {
-			return {
+  export default {
+    data () {
+      return {
         hasLogin: false,
-				userInfo: {}
-			}
-		},
-    onShow: function () {
-      console.log(uni.getStorageSync('userInfo'))
-      this.userInfo = uni.getStorageSync('userInfo') || {}
-      /*
-      if (this.userInfo.phone) {
-        this.hasLogin = true
-      }
-      */
-      if (this.userInfo.phone && uni.getStorageSync('hasLogin')) {
-        this.hasLogin = true
+        userInfo: {},
+        roles: [],
+        isAdmin: false
       }
     },
-		methods: {
+    onLoad: function () {
+      console.log(uni.getStorageSync('userInfo'))
+      console.log(uni.getStorageSync('role'))
+      this.userInfo = uni.getStorageSync('userInfo') || {}
+      if (this.userInfo.phone && uni.getStorageSync('hasLogin')) {
+        this.hasLogin = true
+        this.roles = uni.getStorageSync('role') || []
+        this.isAdmin = this.roles.some(item => item.name === 'ROLE_admin')
+      }
+    },
+    onShow: function () {},
+    methods: {
       getPhoneNumber (e) {
         console.log('get user phone')
         console.log(e)
@@ -73,12 +79,16 @@
         this.getRequest('/wx/user/wxf55b5887b136a227/phone', param).then(resp => {
           if (resp) {
             console.log(resp)
-            console.log(resp.phone)
-            this.userInfo.phone = resp.user.phone
+            console.log(resp.obj)
+            this.userInfo = Object.assign(this.userInfo, resp.obj.user)
             this.hasLogin = true
+            this.roles = resp.obj.user.roles
+            this.isAdmin = resp.obj.user.roles.some(item => item.name === 'ROLE_admin')
+            console.log(this.userInfo)
             uni.setStorageSync('userInfo', this.userInfo)
-            uni.setStorageSync('cookie', resp.cookie)
+            uni.setStorageSync('cookie', resp.obj.cookie)
             uni.setStorageSync('hasLogin', true)
+            uni.setStorageSync('role', resp.obj.user.roles)
           } else {
             console.log('获取失败')
           }
@@ -86,45 +96,24 @@
       },
       getInfoDetail () {
         console.log('get info detail function')
-        const cookie = uni.getStorageSync('cookie')
-        console.log('cookie is ', cookie)
-        this.getRequest('/user/1', null, cookie).then(resp => {
-          console.log('resp is', resp)
-        }).catch(error => {
-          console.log(error)
-        })
-        /*wx.request({
-          url: 'http://localhost:2005/mini/user/1',
-          header: {
-            cookie: 'JSESSIONID=' + cookie,
-            'custom-header': 'hello'
-          },
-          success: function (res) {
-            console.log('success', res)
-          },
-          fail: function(res){
-            console.log('fail', res)
-          }
-        })*/
-        /*
         uni.navigateTo({
-          url:'info/info',
-          success: (res) => {
-            console.log('导航到用户详情页面')
-            console.log(res)
-            this.$getRequest('/user/1').then(resp => {
-              if (resp) {
-                console.log(resp)
-              }
-            })
-          }
-        })*/
+          url: '/pages/user/info/info'
+        })
       },
       getRecordDetail () {
         console.log('get record detail function')
+        uni.navigateTo({
+          url: '/pages/record/user/user?id=' + this.userInfo.id
+        })
+      },
+      getAllRecord () {
+        console.log('get all record (for admin)')
+        uni.navigateTo({
+          url: '/pages/duty/duty'
+        })
       }
-		}
-	}
+    }
+  }
 </script>
 
 <style>
@@ -138,7 +127,9 @@
       url('/static/icon-font/iconfont.ttf') format('truetype'),
       url('/static/icon-font/iconfont.svg#iconfont') format('svg');
 }
-
+page {
+  background-color: #F5F5F5;
+}
 page, view {
   display: flex;
 }

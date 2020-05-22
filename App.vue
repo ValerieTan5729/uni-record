@@ -31,13 +31,13 @@ export default {
             }).then(resp => {
               if (resp) {
                 console.log(resp)
-                uni.setStorageSync('openId', resp.openid)
-                uni.setStorageSync('sessionKey', resp.sessionKey)
+                uni.setStorageSync('openId', resp.obj.openid)
+                uni.setStorageSync('sessionKey', resp.obj.sessionKey)
                 uni.getSetting({
                   success: (res) => {
                     if (!res.authSetting['scope.userInfo']) {
                       // 未获取用户信息的权限
-                      uni.reLaunch({
+                      uni.redirectTo({
                         url: '/pages/login/login'
                       })
                     }
@@ -76,7 +76,4 @@ export default {
 	src: url('/static/uni.ttf');
 }
 /* #endif */
-page {
-  background-color: #F5F5F5;
-}
 </style>

@@ -4,7 +4,7 @@ import App from './App'
 
 // import { postRequest, putRequest, getRequest, deleteRequest } from './utils/api'
 
-import getRequest from './utils/api'
+import { getRequest, postRequest, uploadRequest } from './utils/api'
 
 // Vue.config.productionTip = false
 
@@ -39,6 +39,8 @@ const setUserInfo = (i) => {
 Vue.prototype.$fire = new Vue()
 Vue.prototype.store = store
 Vue.prototype.getRequest = getRequest
+Vue.prototype.postRequest = postRequest
+Vue.prototype.uploadRequest = uploadRequest
 
 Vue.config.productionTip = false
 
