@@ -5,6 +5,9 @@
         <evan-form-item label="总值名称" prop="dutyName">
           <input class="form-input" v-model="record.dutyName" :disabled="true"/>
         </evan-form-item>
+        <evan-form-item label="用户名称" prop="userName" v-if="type && !edit">
+          <input class="form-input" v-model="record.userName" :disabled="true"/>
+        </evan-form-item>
         <evan-form-item label="打卡时间" prop="date" v-if="!edit">
           <input class="form-input" v-model="record.date" :disabled="!edit" placeholder-class="form-input-placeholder"/>
         </evan-form-item>
@@ -16,7 +19,7 @@
           </picker>
         </evan-form-item>
         <evan-form-item label="备注" prop="remark">
-          <textarea v-model="record.remark" :disabled="!edit"></textarea>
+          <textarea v-model="record.remark" :disabled="!edit" style="margin-top: 12px"></textarea>
         </evan-form-item>
         <evan-form-item label="照片" prop="image">
           <image v-if="record.imgPath" class="form-image" mode="aspectFill"
@@ -34,23 +37,27 @@
     data() {
       return {
         record: {
-          dutyName: '',
-          date: '',
-          place: '',
+          dutyName: null,
+          date: null,
+          place: null,
           placeName: null,
-          remark: '',
-          image: '',
+          remark: null,
+          image: null,
           imgPath: null,
           userId: null,
           dutyId: null
         },
         edit: true,
+        type: false,
         placeList: [],
-        imgPath: 'http://localhost:2005/mini/wx/img?path=',
+        imgPath: 'http://zongzhi.kuaihd.com:20050/mini/wx/img?path=',
         defaultImage: '../../../static/image/camera.png',
         photoPath: null,
         rules: {
           dutyName: {
+            required: true
+          },
+          userName: {
             required: true
           },
           place: {
@@ -69,17 +76,20 @@
       this.$refs.form.setRules(this.rules)
     },
     onLoad: function (data) {
+      const userId = uni.getStorageSync("userInfo").id
       console.log(data)
       this.getRequest('/basic/dic/parent/2').then(resp => {
         console.log(resp.obj)
         this.placeList = resp.obj
-        // this.record.placeName = this.findPlaceName()
+        this.record.placeName = this.findPlaceName()
         console.log('place name is ', this.record.placeName)
       })
       if (data && data.item) {
         console.log(data.edit)
         this.record = JSON.parse(data.item)
         this.edit = data.edit === "1" ? true : false
+        this.type = data.type === "1" ? true : false
+        this.record.userId = uni.getStorageSync("userInfo").id
         console.log(this.record)
         console.log(this.edit)
       }
@@ -128,12 +138,20 @@
       send () {
         console.log('保存打卡记录')
         var that = this
+        this.record.userId = uni.getStorageSync("userInfo").id
+        let path = ''
+        const place = this.record.place
         console.log(this.record)
+        if (place >= 3 && place < 7) {
+          path = '/pages/recordA/recordA'
+        } else if (place >= 7 && place < 11) {
+          path = '/pages/recordB/recordB'
+        }
         this.postRequest('/record/add', this.record).then(resp => {
           if (resp) {
             console.log(resp)
-            uni.redirectTo({
-              url: '/pages/record/user/user?id=' + this.record.userId
+            uni.switchTab({
+              url: path
             })
           }
         })

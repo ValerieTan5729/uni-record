@@ -1,30 +1,5 @@
 <template>
 	<view class="form">
-    <!--
-    <view class="info">
-      <view class="item">
-        <image :src="userInfo.avatarUrl" style="text-align: center; width: 150upx; height: 150upx; border-radius: 150upx;" />
-      </view>
-      <view class="center-list">
-        <view class="center-list-item border-bottom">
-          <text class="list-text">姓名</text>
-          <text class="list-content">{{userInfo.name}}</text>
-        </view>
-        <view class="center-list-item border-bottom">
-          <text class="list-text">手机号码</text>
-          <text class="list-content">{{userInfo.phone}}</text>
-        </view>
-        <view class="center-list-item border-bottom">
-          <text class="list-text">所属部门</text>
-          <text class="list-content">{{userInfo.depName}}</text>
-        </view>
-        <view class="center-list-item border-bottom">
-          <text class="list-text">值班级别</text>
-          <text class="list-content">{{userInfo.dutyLevelName}}</text>
-        </view>
-      </view>
-    </view>
-    -->
     <evan-form :model="userInfo" style="width: 90%;">
       <evan-form-item prop="avatarUrl" style="display: flex; justify-content: center;">
         <image :src="userInfo.avatarUrl" style="text-align: center; width: 150upx; height: 150upx; border-radius: 150upx; margin: 20px;" />

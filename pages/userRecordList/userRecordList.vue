@@ -2,7 +2,7 @@
   <view>
     <uni-list v-for="(item, index) in records" :key="item.id">
       <uni-list-item 
-        :title="item.dutyName" :note="item.date"
+        :title="item.dutyName" :note="item.date + '  ' + item.placeName"
         @click="getRecordDetail(item)"/>
     </uni-list>
   </view>
@@ -41,6 +41,7 @@
         const url = '/record/?page=' + this.page + '&limit=10&userId=' + this.userId + '&sortby=date&order=descending'
         this.getRequest(url).then(resp => {
           if (resp) {
+            console.log(resp.obj)
             this.total = resp.obj.total
             this.records = this.records.concat(resp.obj.data)
             this.page += 1
@@ -50,7 +51,7 @@
       getRecordDetail (res) {
         console.log('get record detail function', res)
         uni.navigateTo({
-          url: '/pages/record/detail/detail?&item=' + JSON.stringify(res)
+          url: '/pages/recordDetail/recordDetail?item=' + JSON.stringify(res)
         })
       }
     }

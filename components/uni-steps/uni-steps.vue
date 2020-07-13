@@ -3,17 +3,23 @@
 		<view :class="[direction==='column'?'uni-steps__column':'uni-steps__row']">
 			<view :class="[direction==='column'?'uni-steps__column-text-container':'uni-steps__row-text-container']">
 				<view v-for="(item,index) in options" :key="index" :class="[direction==='column'?'uni-steps__column-text':'uni-steps__row-text']">
-					<text :style="{color:index<=active?activeColor:deactiveColor}" :class="[direction==='column'?'uni-steps__column-title':'uni-steps__row-title']">{{item.title}}</text>
-					<text :style="{color:index<=active?activeColor:deactiveColor}" :class="[direction==='column'?'uni-steps__column-desc':'uni-steps__row-desc']">{{item.desc}}</text>
+          <text v-if="myStyle === 1" :class="[direction==='column'?'uni-steps__column-title':'uni-steps__row-title']" style="font-size: 34rpx; font-weight: bold; margin-bottom: 10rpx; color: #007AFF;">{{item.title}}</text>
+          <text v-else :style="{color:index<=active?activeColor:deactiveColor}" :class="[direction==='column'?'uni-steps__column-title':'uni-steps__row-title']">{{item.title}}</text>
+          <text :style="{color:index<=active?activeColor:deactiveColor}" :class="[direction==='column'?'uni-steps__column-desc':'uni-steps__row-desc']">{{item.desc}}</text>
 				</view>
 			</view>
 			<view :class="[direction==='column'?'uni-steps__column-container':'uni-steps__row-container']">
 				<view :class="[direction==='column'?'uni-steps__column-line-item':'uni-steps__row-line-item']" v-for="(item,index) in options" :key="index">
-					<view :class="[direction==='column'?'uni-steps__column-line':'uni-steps__row-line',direction==='column'?'uni-steps__column-line--before':'uni-steps__row-line--before']" :style="{backgroundColor:index<=active&&index!==0?activeColor:index===0?'transparent':deactiveColor}"></view>
-					<view :class="[direction==='column'?'uni-steps__column-check':'uni-steps__row-check']" v-if="index === active">
-						<uni-icons :color="activeColor" type="checkbox-filled" size="14"></uni-icons>
-					</view>
-					<view :class="[direction==='column'?'uni-steps__column-circle':'uni-steps__row-circle']" v-else :style="{backgroundColor:index<active?activeColor:deactiveColor}"></view>
+          <view :class="[direction==='column'?'uni-steps__column-line':'uni-steps__row-line',direction==='column'?'uni-steps__column-line--before':'uni-steps__row-line--before']" :style="{backgroundColor:index<=active&&index!==0?activeColor:index===0?'transparent':deactiveColor}"></view>
+          <view v-if="myStyle === 1">
+            <text style="color: #007AFF; font-weight: bold;">{{ index + 1 }}</text>
+          </view>
+					<view v-else>
+            <view :class="[direction==='column'?'uni-steps__column-check':'uni-steps__row-check']" v-if="index === active">
+              <uni-icons :color="activeColor" type="checkbox-filled" size="14"></uni-icons>
+            </view>
+            <view :class="[direction==='column'?'uni-steps__column-circle':'uni-steps__row-circle']" v-else :style="{backgroundColor:index<active?activeColor:deactiveColor}"></view>
+          </view>
 					<view :class="[direction==='column'?'uni-steps__column-line':'uni-steps__row-line',direction==='column'?'uni-steps__column-line--after':'uni-steps__row-line--after']" :style="{backgroundColor:index<active&&index!==options.length-1?activeColor:index===options.length-1?'transparent':deactiveColor}"></view>
 				</view>
 			</view>
@@ -55,13 +61,17 @@
 			deactiveColor: {
 				// 未激活状态颜色
 				type: String,
-				default: '#999999'
+				default: '#000000'
 			},
 			active: {
 				// 当前步骤
 				type: Number,
-				default: 0
+				default: -1
 			},
+      myStyle: {
+        type: Number,
+        default: 0
+      },
 			options: {
 				type: Array,
 				default () {

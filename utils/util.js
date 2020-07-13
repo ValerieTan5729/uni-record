@@ -10,8 +10,36 @@ export const formateDate = (datetime, type) => {
     result = year + '-'+ month +'-'+ date +' '+ hour +':'+ minute +':' + second
   } else if (type === 'Y-M-D') {
     result = year + '-'+ month +'-'+ date
-  } if (type === 'h:min:s') {
+  } else if (type === 'h:min:s') {
     result = hour +':'+ minute +':' + second
+  } else if (type === 'MD') {
+    result = month + '月' + date + '日'
+  } else if (type === 'week') {
+    console.log('foramteDate week : ', datetime)
+    switch (datetime.toString().substr(0, 3)) {
+      case 'Mon':
+        result = '星期一'
+        break
+      case 'Tue':
+        result = '星期二'
+        break
+      case 'Wed':
+        result = '星期三'
+        break
+      case 'Thu':
+        result = '星期四'
+        break
+      case 'Fri':
+        result = '星期五'
+        break
+      case 'Sat':
+        result = '星期六'
+        break
+      case 'Sun':
+        result = '星期日'
+        break
+    }
+    console.log(datetime.toString().substr(0, 3))
   }
   return result
 }

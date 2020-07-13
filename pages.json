@@ -1,53 +1,56 @@
 {
-    "pages": [{
-            "path":"pages/record/record",
-            "style": {
-              "navigationBarTitleText": "打卡页面"
-            }
-        }, {
-            "path":"pages/user/user",
-            "style": {
-              "navigationBarTitleText": "我的信息"
-            }
-        }, {
-            "path" : "pages/test/test",
-            "style": {
-            	"navigationBarTitleText": "测试"
-            }
-        }, {         
-            "path": "pages/index/index",
-            "style": {
-              "navigationBarTitleText": "欢迎"
-            }
-        }, {
-            "path" : "pages/login/login",
-            "style" : {
-              "navigationBarTitleText": "欢迎界面"
-            }
-        }, {
-            "path" : "pages/blank/blank",
-            "style" : {}
-        }, {
-            "path" : "pages/user/info/info",
-            "style" : {
-              "navigationBarTitleText": "用户详情"
-            }
-        }, {
-            "path" : "pages/duty/duty",
-            "style" : {
-              "navigationBarTitleText": "总值列表"
-            }
-        }, {
-            "path" : "pages/record/user/user",
-            "style" : {
-              "navigationBarTitleText": "用户打卡记录"
-            }
-        }, {
-            "path" : "pages/record/detail/detail",
-            "style" : {
-              "navigationBarTitleText": "打卡记录"
-            }
+    "pages": [
+      {
+        "path" : "pages/recordA/recordA",
+        "style" : {
+          "navigationBarTitleText": "媒体港打卡",
+          "enablePullDownRefresh": true
         }
+      } , {
+        "path" : "pages/recordB/recordB",
+        "style" : {
+          "navigationBarTitleText": "花果山打卡",
+          "enablePullDownRefresh": true
+        }
+      } , {
+        "path":"pages/user/user",
+        "style": {
+          "navigationBarTitleText": "我的信息"
+        }
+      }, {
+        "path" : "pages/login/login",
+        "style" : {
+          "navigationBarTitleText": "欢迎界面"
+        }
+      }, {
+        "path" : "pages/blank/blank",
+        "style" : {}
+      }, {
+        "path" : "pages/userInfo/userInfo",
+        "style" : {
+          "navigationBarTitleText": "用户详情"
+        }
+      }, {
+        "path" : "pages/recordDetail/recordDetail",
+        "style" : {
+          "navigationBarTitleText": "打卡详情"
+        }
+      }, {
+        "path" : "pages/userRecordList/userRecordList",
+        "style" : {
+          "navigationBarTitleText": "用户打卡记录"
+        }
+      }, {
+        "path" : "pages/currentDutyRecord/currentDutyRecord",
+        "style" : {
+          "navigationBarTitleText": "当前总值打卡记录"
+        }
+      } , {
+        "path" : "pages/rule/rule",
+        "style" : {
+          "navigationBarTitleText": "打卡指引"
+        }
+      }
     ],
     "globalStyle": {
         "navigationBarTextStyle": "black",
@@ -60,11 +63,17 @@
     	"borderStyle": "black",
     	"backgroundColor": "#F8F8F8",
     	"list": [{
-    			"pagePath": "pages/record/record",
-    			"iconPath": "static/icon/home.png",
-    			"selectedIconPath": "static/icon/homeHL.png",
-    			"text": "打卡"
+    			"pagePath": "pages/recordA/recordA",
+    			"iconPath": "static/icon/building.png",
+    			"selectedIconPath": "static/icon/buildingHL.png",
+    			"text": "媒体港"
     		},
+        {
+        		"pagePath": "pages/recordB/recordB",
+        		"iconPath": "static/icon/mountain.png",
+        		"selectedIconPath": "static/icon/mountainHL.png",
+        		"text": "花果山"
+        	},
     		{
     			"pagePath": "pages/user/user",
     			"iconPath": "static/icon/my.png",

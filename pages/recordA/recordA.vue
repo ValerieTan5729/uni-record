@@ -1,61 +1,44 @@
 <template>
 	<view class="page">
-    <view class="timeInfo">
-      <view class="timeView">
-        <text>{{time}}</text>
-      </view>
-      <view class="info">
-        <view class="dateView">
-          <text>{{date}}</text>
-        </view>
-        <view class="weekView">
-          <text>{{week}}</text>
-        </view>
-      </view>
-    </view>
-    <view class="myButton">
-      <button class="record" style="width: 200rpx;" @click="getRecordList">
-        <text class="icon">&#xe603;</text> 打卡记录
-      </button>
-      <button class="rule" style="width: 160rpx;" @click="toRulePage"> 
-        <text class="icon">&#xe6cd;</text> 规则
-      </button>
-    </view>
-    <view class="dutyInfo">
-      <text v-if="duty.name === undefined">当前没有需要打卡的值班</text>
-      <text v-else>{{duty.name}}</text>
-    </view>
-    <view class="main">
-      <quadrangle :place="place" v-on:punchIn="punchIn" />
-    </view>
+	  <view class="timeInfo">
+	    <view class="timeView">
+	      <text>{{time}}</text>
+	    </view>
+	    <view class="info">
+	      <view class="dateView">
+	        <text>{{date}}</text>
+	      </view>
+	      <view class="weekView">
+	        <text>{{week}}</text>
+	      </view>
+	    </view>
+	  </view>
+	  <view class="myButton">
+	    <button class="record" style="width: 200rpx;" @click="getRecordList">
+	      <text class="icon">&#xe603;</text> 打卡记录
+	    </button>
+	    <button class="rule" style="width: 160rpx;" @click="toRulePage"> 
+	      <text class="icon">&#xe6cd;</text> 规则
+	    </button>
+	  </view>
+	  <view class="dutyInfo">
+	    <text v-if="duty.name === undefined">当前没有需要打卡的值班</text>
+	    <text v-else>{{duty.name}}</text>
+	  </view>
+	  <view class="main">
+	    <quadrangle :place="place" v-on:punchIn="punchIn" />
+	  </view>
 	</view>
 </template>
 
 <script>
+  // 媒体港打卡页面
 import { formateDate } from '../../utils/util.js'
 export default {
   data() {
     return {
       duty: {},
-      place: [{
-        name: '打卡地点1',
-        status: 0,
-        isChecked: true,
-        time: '09:30:45'
-      }, {
-        name: '打卡地点2',
-        status: 0,
-        isChecked: false
-      }, {
-        name: '打卡地点3',
-        status: 0,
-        isChecked: true,
-        time: '10:30:45'
-      }, {
-        name: '打卡地点4',
-        status: 0,
-        isChecked: false
-      }],
+      place: [],
       time: formateDate(new Date(), 'h:min:s'),
       date: formateDate(new Date(), 'MD'),
       week: formateDate(new Date(), 'week')
@@ -67,6 +50,7 @@ export default {
   onShow () {
     this.duty = uni.getStorageSync('currentDuty') || {}
     const cookie = uni.getStorageSync('cookie') || undefined
+    const userId = uni.getStorageSync('userInfo').id
     console.log('record page on show, id is ' + this.duty.id)
     console.log('condition:' + (!this.duty.id && cookie))
     // debugger
@@ -76,6 +60,7 @@ export default {
           uni.setStorageSync('currentDuty', resp.obj)
           if (!resp.obj.id) {
             this.duty = resp.obj
+            this.getRecord(userId, this.duty.id)
           } else {
             uni.showModal({
               title: '提示',
@@ -86,7 +71,35 @@ export default {
       }).catch(error => {
         console.log(error)
       })
+    } else {
+      this.getRecord(userId, this.duty.id)
     }
+  },
+  onPullDownRefresh () {
+    console.log('refresh')
+    const userId = uni.getStorageSync('userInfo').id
+    uni.showLoading({
+        title: '更新总值信息'
+    });
+    this.getRequest('/duty/current').then(resp => {
+      if (resp) {
+        console.log(resp.obj)
+        uni.setStorageSync('currentDuty', resp.obj)
+        if (resp.obj.id) {
+          this.duty = resp.obj
+          this.getRecord(userId, resp.obj.id)
+        } else {
+          uni.showModal({
+            title: '提示',
+            content: '当前没有需要值班的总值'
+          })
+        }
+        uni.hideLoading()
+        uni.stopPullDownRefresh()
+      }
+    }).catch(error => {
+      console.log(error)
+    })
   },
   methods: {
     getTime () {
@@ -94,6 +107,17 @@ export default {
       setInterval(() => {
         that.time = formateDate(new Date(), 'h:min:s')
       }, 1000)
+    },
+    getRecord (userId, dutyId) {
+      const url = '/record/check/0?userId=' + userId + '&dutyId=' + dutyId
+      this.getRequest(url).then(resp => {
+        if (resp) {
+          console.log(resp.obj)
+          this.place = resp.obj
+        }
+      }).catch(error => {
+        console.log(error)
+      })
     },
     punchIn () {
       console.log('点击了打卡按钮')
@@ -119,7 +143,8 @@ export default {
                   dutyId: that.duty.id,
                   // userId: uni.getStorageSync('userInfo').id,
                   imgPath: resp.obj.imgUrl,
-                  place: resp.obj.place
+                  place: resp.obj.place,
+                  remark: '正常'
                 }
                 uni.navigateTo({
                   url: '/pages/recordDetail/recordDetail?edit=1&item=' + JSON.stringify(record)
@@ -169,6 +194,10 @@ export default {
     margin-top: 20rpx;
   }
   
+  .info {
+    margin-top: 10rpx;
+  }
+  
   .dateView{
     margin-top: 10rpx;
     font-size: 40rpx;
@@ -176,7 +205,9 @@ export default {
   
   .timeView {
     font-size: 100upx;
+    margin-left: 10rpx;
     margin-right: 40rpx;
+    width: 420rpx;
   }
   
   .myButton {

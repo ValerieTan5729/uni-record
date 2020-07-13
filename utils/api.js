@@ -33,19 +33,41 @@ http.interceptor.response((success) => {
       content: '权限不足，请联系管理员'
     })
   } else if (error.statusCode === 401) {
-    console.log('尚未登录，请登录')
-    uni.showModal({
-      title: '错误信息',
-      content: '尚未登录，请登录',
-      complete: () => {
-        console.log('跳转登录页面')
-        let userInfo = uni.getStorageSync('userInfo') || {}
-        userInfo.phone = undefined
-        uni.setStorageSync('hasLogin', false)
-        uni.reLaunch({
-          url: '/pages/blank/blank'
-        })
+    console.log('尚未登录后台，请登录')
+    uni.getSetting({
+      success: (auth) => {
+        if (!auth.authSetting['scope.userInfo']) {
+          console.log('未获取用户信息的权限')
+          /*
+          uni.redirectTo({
+            url: '/pages/login/login'
+          })
+          */
+        } else {
+          uni.showModal({
+            title: '错误信息',
+            content: '尚未登录，请登录',
+            complete: () => {
+              console.log('跳转登录页面')
+              let userInfo = uni.getStorageSync('userInfo') || {}
+              userInfo.phone = undefined
+              uni.setStorageSync('hasLogin', false)
+              uni.setStorageSync('userInfo', userInfo)
+              uni.setStorageSync('cookie', undefined)
+              uni.setStorageSync('role', undefined)
+              uni.setStorageSync('currentDuty', undefined)
+              uni.switchTab({
+                url: '/pages/user/user'
+              })
+            }
+          })
+        }
       }
+    })
+  } else if (error.statusCode === 503) {
+    uni.showModal({
+      title: '请稍后重试',
+      content: error.data
     })
   } else {
     if (error.data.msg) {
@@ -64,7 +86,10 @@ http.interceptor.response((success) => {
   }
 })
 
-const base = 'http://localhost:2005/mini'
+// const base = 'http://localhost:2005/mini'
+// const base = 'http://47.102.210.132:20050/mini'
+// const base = 'http://10.40.25.136:20050/mini'
+const base = 'https://zongzhi.kuaihd.com/mini'
 
 
 export const getRequest = (url, params) => {
